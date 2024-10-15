@@ -10,17 +10,19 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class HuffmanEncoderGUI {
-    private JButton CompressBtn, DecompressBtn, ShowContentBtn, OpenBtn, SelectBtn, SaveBtn;
+    private JButton CompressBtn, DecompressBtn, ShowContentBtn, SelectFileBtn,SelectCompressedFileBtn, SaveBtn;
     private JLabel HeadingLabel, SelectFileLabel, SelectCompressedFileLabel;
     private JTextField FilePathField, CompressedFilePathField;
     private JPanel jPanel1;
     private static boolean hasBeenCompressed = false;
     private static boolean fileCompressed = false;
     private String src = new String(), dst = new String();
+    private String srcFile=new String(),destFile=new String();
     private static HuffmanEncoder encoder;
     private static Message msg;
+    private String log;
 
-
+    private JButton compressionRatio;
     HuffmanEncoderGUI() {
         JFrame f = new JFrame();
         f.setTitle("Huffman - Text File ");
@@ -39,13 +41,13 @@ public class HuffmanEncoderGUI {
         gbc.insets = new Insets(10, 10, 10, 10); // Add padding around components
 
         // Heading Label
-        HeadingLabel = new JLabel("Huffman Encoding Text File");
+        HeadingLabel = new JLabel("");
         HeadingLabel.setFont(new Font("Serif", Font.BOLD, 20));
         HeadingLabel.setForeground(Color.WHITE);
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2; gbc.anchor = GridBagConstraints.CENTER;
         f.add(HeadingLabel, gbc);
 
-        // Panel background
+
         jPanel1 = new JPanel();
         jPanel1.setBackground(new Color(31, 40, 51));
         f.getContentPane().setBackground(new Color(31, 40, 51));
@@ -62,9 +64,9 @@ public class HuffmanEncoderGUI {
         gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 1;
         f.add(FilePathField, gbc);
 
-        OpenBtn = new JButton("Browse");
+        SelectFileBtn = new JButton("Browse");
         gbc.gridx = 1; gbc.gridy = 2; gbc.gridwidth = 1;
-        f.add(OpenBtn, gbc);
+        f.add(SelectFileBtn, gbc);
 
         ShowContentBtn = new JButton("Show Content");
         gbc.gridx = 2; gbc.gridy = 2;
@@ -82,11 +84,11 @@ public class HuffmanEncoderGUI {
         gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 1;
         f.add(CompressedFilePathField, gbc);
 
-        SelectBtn = new JButton("Select Compressed File");
+        SelectCompressedFileBtn = new JButton("Select Compressed File");
         gbc.gridx = 1; gbc.gridy = 4; gbc.gridwidth = 1;
-        f.add(SelectBtn, gbc);
+        f.add(SelectCompressedFileBtn, gbc);
 
-        // Compress and Decompress buttons
+
         CompressBtn = new JButton("Compress");
         gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 1;
         f.add(CompressBtn, gbc);
@@ -95,109 +97,131 @@ public class HuffmanEncoderGUI {
         gbc.gridx = 1; gbc.gridy = 5; gbc.gridwidth = 1;
         f.add(DecompressBtn, gbc);
 
-        OpenBtn.addActionListener(new ActionListener() {
+        compressionRatio = new JButton("Compression Ratio ");
+        gbc.gridx=0; gbc.gridy=6; gbc.gridwidth=1;
+        f.add(compressionRatio,gbc);
+
+
+
+        SelectFileBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                  openButtonAction();
             }
         });
 
-        SelectBtn.addActionListener(new ActionListener() {
+        SelectCompressedFileBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 openCompressedFile();
             }
+            private void openCompressedFile(){
+                JFileChooser fchooser = new JFileChooser();
+                fchooser.showOpenDialog(null);
+                if(fchooser.getSelectedFile() != null)
+                {
+                    File temp=fchooser.getSelectedFile();
+                    String fName=temp.getAbsolutePath();
+                    CompressedFilePathField.setText(fName);
+                }
+            }
         });
 
         ShowContentBtn.addActionListener(new ShowAction());
-
          CompressBtn.addActionListener(new compressButtonActionPeformed());
         DecompressBtn.addActionListener(new DecompressButtonActionPerformed());
-        SelectBtn.addActionListener(evt -> selectButtonActionPerformed(evt));
+        compressionRatio.addActionListener(new showPrevCompressionDetails());
+   //     SelectFileBtn.addActionListener(evt -> selectButtonActionPerformed(evt));
     }
+class showPrevCompressionDetails implements ActionListener {
+    public void actionPerformed(ActionEvent e) {
+        if (hasBeenCompressed || fileCompressed) {
+            File dest= new File(dst);
+            File srctemp=new File(src);
+            log = "<html>👍 Compression Successfully Done!<br><br>"
+                    + "Source File: " + srcFile + " -- " + (srctemp.length() * 0.001) + " KB" + " <br>"
+                    + "Destination File: " + destFile + " -- " + (dest.length() * 0.001) + " KB" + "</html>";
 
+            JOptionPane.showMessageDialog(null, log, "Compression Status", JOptionPane.INFORMATION_MESSAGE);
+
+        }
+        else {
+            JOptionPane.showMessageDialog(null,"No file has been Compressed Yet!","Compression Status",JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+}
     class compressButtonActionPeformed implements ActionListener{
         public void actionPerformed (ActionEvent e){
-        StartCompression();
+                 StartCompression();
+         }
+        private void StartCompression() {
+            JOptionPane.showConfirmDialog(null,dst);
+            if(dst.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please specify a location to save compressed file");
+                return;
+            }
+            new ProgressBar().setVisible(true);
+            HuffCompression.compress(src, dst);
+            fileCompressed = true;
+            File dest= new File(dst);
+            File srctemp=new File(src);
+
+            String srcFile=new File(src).getName();
+            String destFile=new File(dst).getName();
+
+            log = "<html>👍 Compression Successfully Done!<br><br>"
+                    + "Source File: " + srcFile + " -- " + (srctemp.length() * 0.001) + " KB" + " <br>"
+                    + "Destination File: " + destFile + " -- " + (dest.length() * 0.001) + " KB" + "</html>";
+
+            JOptionPane.showMessageDialog(null, log, "Compression Status", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
-    }
-    class DecompressButtonActionPerformed implements ActionListener{
-        public void actionPerformed (ActionEvent e)
-        {
+    class DecompressButtonActionPerformed implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
             startDecompression();
-        }    }
-    private void StartCompression() {
-        if(dst.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please specify a location to save compressed file");
-            return;
         }
-        new ProgressBar().setVisible(true);
-        HuffCompression.compress(src, dst);
-        fileCompressed = true;
-    }
-
-    private void startDecompression() {
-        String path = CompressedFilePathField.getText();
-        if(!path.isEmpty()) {
-            File f = new File(path);
-            String ext;
-            int i;
-            for(i = path.length()-1; i >= 0 ; i--) {
-                if(path.charAt(i) == '.') break;
-            }
-            ext = path.substring(i, path.length());
-            System.out.println(ext);
-            String dir = f.getParent() + "\\decompressed" + ext;
-            HuffCompression huffCompression = new HuffCompression();
-            huffCompression.decompress(path, dir);
-            JOptionPane.showMessageDialog(null, "File has been decompressed and saved at" +
-                    " the location: " + dir);
-        } else JOptionPane.showMessageDialog(null, "no file has been selected for decompression");
-    }
- /*   private void openButtonAction() {
-        JFileChooser fchooser = new JFileChooser();
-        fchooser.showOpenDialog(null);
-        if(fchooser.getSelectedFile() != null) {
-            File f0 = fchooser.getSelectedFile();
-
-            String filename = f0.getAbsolutePath();
-
-            String dstDirectory = f0.getParent(); // Get the directory (parent folder) of the file
-            JOptionPane.showConfirmDialog(null,dstDirectory);
-            String baseName = f0.getName().substring(0, f0.getName().lastIndexOf(".")); // Get file name without extension
-            // Create a new file in the same directory with '_compressed' suffix
-            File compressedFile = new File(dstDirectory, baseName + "_compressed.txt");
-            dst = compressedFile.getAbsolutePath();
-            FilePathField.setText(filename);
-            if(f0.exists() && filename.substring(filename.length()-3, filename.length()).equals("txt")) {
-            //   msg = new Message(convertFileToString(f0));
-            }
+        private void startDecompression() {
+            String path = CompressedFilePathField.getText();
+            if (!path.isEmpty()) {
+                File f = new File(path);
+                String ext;
+                int i;
+                for (i = path.length() - 1; i >= 0; i--) {
+                    if (path.charAt(i) == '.') break;
+                }
+                ext = path.substring(i, path.length());
+                System.out.println(ext);
+                String dir = f.getParent() + "\\decompressed" + ext;
+                HuffCompression huffCompression = new HuffCompression();
+                huffCompression.decompress(path, dir);
+                JOptionPane.showMessageDialog(null, "File has been decompressed and saved at" +
+                        " the location: " + dir);
+            } else JOptionPane.showMessageDialog(null, "no file has been selected for decompression");
         }
-    }*/
+    }
     private void openButtonAction() {
         JFileChooser fchooser = new JFileChooser();
         fchooser.showOpenDialog(null);
 
         if (fchooser.getSelectedFile() != null) {
-            File f0 = fchooser.getSelectedFile();  // Get the selected file
-            String filename = f0.getAbsolutePath();  // Get the full file path
+            File f0 = fchooser.getSelectedFile();
+            String filename = f0.getAbsolutePath();
+            src=f0.getAbsolutePath();
 
-            String dstDirectory = f0.getParent();  // Get the directory (parent folder) of the file
-            JOptionPane.showMessageDialog(null, "Directory: " + dstDirectory);  // Display the directory path for confirmation
+            String dstDirectory = f0.getParent();
 
             String baseName = f0.getName().substring(0, f0.getName().lastIndexOf("."));  // Get file name without extension
 
-            // Create a new file in the same directory with '_compressed' suffix
             File compressedFile = new File(dstDirectory, baseName + "_compressed.txt");
 
             try {
-                // Check if the file does not exist and create a new one
                 if (compressedFile.createNewFile()) {
                     JOptionPane.showMessageDialog(null, "File created: " + compressedFile.getAbsolutePath());
                 } else {
                     JOptionPane.showMessageDialog(null, "File already exists: " + compressedFile.getAbsolutePath());
                 }
                 dst = compressedFile.getAbsolutePath();
+
                 FilePathField.setText(filename);
 
             } catch (Exception e) {
@@ -210,50 +234,8 @@ public class HuffmanEncoderGUI {
         }
     }
 
-    private void openCompressedFile(){
-        JFileChooser fchooser = new JFileChooser();
-        fchooser.showOpenDialog(null);
-        if(fchooser.getSelectedFile() != null)
-        {
-            File temp=fchooser.getSelectedFile();
-            String fName=temp.getAbsolutePath();
-            CompressedFilePathField.setText(fName);
-
-        }
-    }
-    private void ShowActionFunction(){
-        if(!FilePathField.getText().isEmpty()) {
-            try {
-                String pathfile = FilePathField.getText();
-                File f = new File(pathfile);
-                if(f.exists()) {
-                    BufferedReader bufReader = new BufferedReader(new FileReader(f));
-                    String str = new String();
-                    Displayer area = new Displayer();
-                    while((str = bufReader.readLine()) != null) {
-                        area.displayArea.append(str + '\n');
-                    }
-                }
-            } catch(IOException io) {
-                JOptionPane.showMessageDialog(null, "Invalid File", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Please fill the text field", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    private void showContentButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // Action for Show Content button
-    }
 
 
-
-    private void decompressButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // Action for Decompress button
-    }
-
-    private void selectButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // Action for Select Compressed File button
-    }
 
     class HeadingSlider extends WindowAdapter {
         public void windowOpened(WindowEvent e) {
@@ -261,10 +243,44 @@ public class HuffmanEncoderGUI {
             T1.t.start();
         }
     }
+    public static String convertSizeToReadableFormat(long sizeInBytes) {
+        if (sizeInBytes < 1024) {
+            return sizeInBytes + " bytes";
+        } else if (sizeInBytes < 1024 * 1024) {
+            return String.format("%.2f KB", sizeInBytes / 1024.0);
+        } else if (sizeInBytes < 1024 * 1024 * 1024) {
+            return String.format("%.2f MB", sizeInBytes / (1024.0 * 1024));
+        } else {
+            return String.format("%.2f GB", sizeInBytes / (1024.0 * 1024 * 1024));
+        }
+    }
+
     class ShowAction implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             ShowActionFunction();
         }
+
+        private void ShowActionFunction(){
+            if(!FilePathField.getText().isEmpty()) {
+                try {
+                    String pathfile = FilePathField.getText();
+                    File f = new File(pathfile);
+                    if(f.exists()) {
+                        BufferedReader bufReader = new BufferedReader(new FileReader(f));
+                        String str = new String();
+                        Displayer area = new Displayer();
+                        while((str = bufReader.readLine()) != null) {
+                            area.displayArea.append(str + '\n');
+                        }
+                    }
+                } catch(IOException io) {
+                    JOptionPane.showMessageDialog(null, "Invalid File", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Please fill the text field", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
     }
 
 

@@ -8,67 +8,112 @@ import java.util.zip.*;
 public class ZippingSoftware extends JFrame {
     private JTextField folderPathTextField, zipFilePathTextField;
     private JButton selectFolderButton, zipButton, selectZipFileButton, unzipButton;
-    private JLabel statusLabel;
+    private JLabel statusLabel, headingLabel;
     private String selectedFolderPath = "";
     private String selectedZipFilePath = "";
 
     public ZippingSoftware() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        getContentPane().setBackground(new Color(31, 40, 51));
         setTitle("Folder Zipping and Unzipping Software");
-        setSize(450, 300);
+        setSize(500, 350);
+        setLayout(new GridBagLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Center the window
-        setLayout(null); // Using null layout for custom positioning
+        addWindowListener(new HeadingSlider());
 
-        // Folder path label
+        gbc.insets = new Insets(10, 10, 10, 10); // Add padding around components
+        setLocationRelativeTo(null); // Center the window
+
+        // Heading label
+        headingLabel = new JLabel("");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 4;
+        headingLabel.setForeground(Color.WHITE);
+        headingLabel.setFont(new Font("Serif", Font.BOLD, 17));
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(headingLabel, gbc);
+
+        // Folder to zip label
         JLabel folderPathLabel = new JLabel("Folder to Zip:");
-        folderPathLabel.setBounds(20, 20, 100, 30);
-        add(folderPathLabel);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        folderPathLabel.setForeground(Color.WHITE);
+        add(folderPathLabel, gbc);
 
         // Folder path text field
-        folderPathTextField = new JTextField();
-        folderPathTextField.setBounds(120, 20, 200, 30);
+        folderPathTextField = new JTextField(20);
         folderPathTextField.setEditable(false); // Not editable directly
-        add(folderPathTextField);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        add(folderPathTextField, gbc);
 
         // Select folder button
         selectFolderButton = new JButton("Select Folder");
-        selectFolderButton.setBounds(120, 60, 120, 30);
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        add(selectFolderButton, gbc);
         selectFolderButton.addActionListener(new SelectFolderButtonListener());
-        add(selectFolderButton);
 
         // Zip button
         zipButton = new JButton("Zip Folder");
-        zipButton.setBounds(250, 60, 100, 30);
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(zipButton, gbc);
         zipButton.addActionListener(new ZipButtonListener());
-        add(zipButton);
 
-        // Zip file path label
+        // ZIP file to unzip label
         JLabel zipFilePathLabel = new JLabel("ZIP File to Unzip:");
-        zipFilePathLabel.setBounds(20, 120, 120, 30);
-        add(zipFilePathLabel);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        zipFilePathLabel.setForeground(Color.WHITE);
+        gbc.anchor = GridBagConstraints.EAST;
+        add(zipFilePathLabel, gbc);
 
-        // Zip file path text field
-        zipFilePathTextField = new JTextField();
-        zipFilePathTextField.setBounds(140, 120, 200, 30);
+        // ZIP file path text field
+        zipFilePathTextField = new JTextField(20);
         zipFilePathTextField.setEditable(false); // Not editable directly
-        add(zipFilePathTextField);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        add(zipFilePathTextField, gbc);
 
         // Select ZIP file button
         selectZipFileButton = new JButton("Select ZIP File");
-        selectZipFileButton.setBounds(140, 160, 120, 30);
+        gbc.gridx = 3;
+        gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        add(selectZipFileButton, gbc);
         selectZipFileButton.addActionListener(new SelectZipFileButtonListener());
-        add(selectZipFileButton);
 
         // Unzip button
         unzipButton = new JButton("Unzip File");
-        unzipButton.setBounds(270, 160, 100, 30);
+        gbc.gridx = 2;
+        gbc.gridy = 4;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(unzipButton, gbc);
         unzipButton.addActionListener(new UnzipButtonListener());
-        add(unzipButton);
 
         // Status label
         statusLabel = new JLabel("Status: Waiting for folder selection...");
-        statusLabel.setBounds(20, 210, 400, 30);
-        add(statusLabel);
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 4;
+        statusLabel.setForeground(Color.WHITE);
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(statusLabel, gbc);
     }
 
     // Action listener for selecting a folder for zipping
@@ -87,6 +132,13 @@ public class ZippingSoftware extends JFrame {
             } else {
                 statusLabel.setText("Status: No folder selected.");
             }
+        }
+    }
+
+    class HeadingSlider extends WindowAdapter {
+        public void windowOpened(WindowEvent e) {
+            ThreadedText T1 = new ThreadedText("File Zipping and UnZipping", headingLabel);
+            T1.t.start();
         }
     }
 
