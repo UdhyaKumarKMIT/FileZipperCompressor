@@ -5,15 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e2453b68-43c0-4a1d-99aa-da188133ee96" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/DCTProcessor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ImageCompressor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ImageCompressorGUI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ImageProcessor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HuffmanEncoderGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HuffmanEncoderGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ThreadedText.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ThreadedText.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ZippingSoftware.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ZippingSoftware.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -44,11 +52,13 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.HuffmanEncoderGUI.executor": "Run",
+    "Application.ImageCompressionSoftware.executor": "Run",
+    "Application.ImageCompressorGUI.executor": "Run",
     "Application.ZippingSoftware.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/udhya/OneDrive/Desktop/FileZipperCompressor"
+    "last_opened_file_path": "C:/Users/udhya/Downloads/image-compressor-main/image-compressor-main"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
