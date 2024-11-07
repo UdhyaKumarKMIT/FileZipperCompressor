@@ -247,7 +247,12 @@ public class ImageCompressorGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (selectedFile != null) {
             try {
-                File outputFile = new File("compressed_" + selectedFile.getName());
+                File outputFile;
+                String parentDirectory = selectedFile.getParent();
+
+                // Create the output file in the same directory as the selected file
+                outputFile = new File(parentDirectory, "compressed_" + selectedFile.getName());
+
                 float quality = qualitySlider.getValue() / 100f;
                 compressor.compressImage(selectedFile, outputFile, quality);
                 statusLabel.setText("Image compressed to: " + outputFile.getPath());

@@ -32,7 +32,7 @@ public class HuffmanEncoderGUI {
         f.addWindowListener(new HeadingSlider());
         f.setLocationRelativeTo(null); // Center the frame
 
-        initComponents(f); // Pass the JFrame to initComponents for layout
+        initComponents(f);
         f.setVisible(true); // Make frame visible after setting up components
     }
 
@@ -155,7 +155,7 @@ class showPrevCompressionDetails implements ActionListener {
                  StartCompression();
          }
         private void StartCompression() {
-            JOptionPane.showConfirmDialog(null,dst);
+            JOptionPane.showMessageDialog(null,dst);
             if(dst.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Please specify a location to save compressed file");
                 return;
@@ -196,7 +196,7 @@ class showPrevCompressionDetails implements ActionListener {
                 huffCompression.decompress(path, dir);
                 JOptionPane.showMessageDialog(null, "File has been decompressed and saved at" +
                         " the location: " + dir);
-            } else JOptionPane.showMessageDialog(null, "no file has been selected for decompression");
+            } else JOptionPane.showMessageDialog(null, "No file has been selected for decompression");
         }
     }
     private void openButtonAction() {
@@ -216,9 +216,9 @@ class showPrevCompressionDetails implements ActionListener {
 
             try {
                 if (compressedFile.createNewFile()) {
-                    JOptionPane.showMessageDialog(null, "File created: " + compressedFile.getAbsolutePath());
+                 //   JOptionPane.showMessageDialog(null, "File created: " + compressedFile.getAbsolutePath());
                 } else {
-                    JOptionPane.showMessageDialog(null, "File already exists: " + compressedFile.getAbsolutePath());
+                    //JOptionPane.showMessageDialog(null, "File already exists: " + compressedFile.getAbsolutePath());
                 }
                 dst = compressedFile.getAbsolutePath();
 
@@ -260,26 +260,35 @@ class showPrevCompressionDetails implements ActionListener {
             ShowActionFunction();
         }
 
-        private void ShowActionFunction(){
-            if(!FilePathField.getText().isEmpty()) {
-                try {
-                    String pathfile = FilePathField.getText();
-                    File f = new File(pathfile);
-                    if(f.exists()) {
-                        BufferedReader bufReader = new BufferedReader(new FileReader(f));
-                        String str = new String();
-                        Displayer area = new Displayer();
-                        while((str = bufReader.readLine()) != null) {
-                            area.displayArea.append(str + '\n');
+        private void ShowActionFunction() {
+            if (!FilePathField.getText().isEmpty()) {
+                String pathfile = FilePathField.getText();
+                File file = new File(pathfile);
+
+                if (file.exists()) {
+                    try (BufferedReader bufReader = new BufferedReader(new FileReader(file))) {
+                        StringBuilder content = new StringBuilder();
+                        String line;
+
+                        while ((line = bufReader.readLine()) != null) {
+                            content.append(line).append('\n');
                         }
+
+                        Displayer area = new Displayer();
+                        area.displayArea.setText(content.toString()); // Set all text at once
+                        area.displayArea.setCaretPosition(0); // Move caret to the beginning
+                    } catch (IOException io) {
+                        JOptionPane.showMessageDialog(null, "Invalid File", "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                } catch(IOException io) {
-                    JOptionPane.showMessageDialog(null, "Invalid File", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "File Not Found", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Please fill the text field", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "File Not Selected. Please Select a File.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+
+
 
     }
 
@@ -365,38 +374,6 @@ class showPrevCompressionDetails implements ActionListener {
         return contents;
     }
 
-  /*  private void showBytesActionPerformed(ActionEvent evt) {
-        if(!jTextField2.getText().isEmpty()) {
-            File f = new File(jTextField2.getText());
-            JOptionPane.showMessageDialog(null, "Current Size: " + (f.length() * 0.001) + " KB");
-        } else {
-            JOptionPane.showMessageDialog(null, "No file has been selected");
-        }
-    }
-
-    private void compBytesActionPerformed(ActionEvent evt) {
-        if(!jTextField3.getText().isEmpty() && fileCompressed) {
-            File f = new File(jTextField3.getText());
-            JOptionPane.showMessageDialog(null, "Compressed Size: " + (f.length() * 0.001) + " KB");
-        } else {
-            JOptionPane.showMessageDialog(null, "No file has been selected");
-        }
-    }
-
-    private void compressBitsActionPerformed(ActionEvent evt) {
-        if(!ensureValidityOfPath())
-            JOptionPane.showMessageDialog(null, "Invalid Path", "ERROR",
-                    JOptionPane.ERROR_MESSAGE);
-        else {
-            File f0 = new File(jTextField2.getText());
-            String contents = convertFileToString(f0);
-            encoder = new HuffmanEncoder(new Message(contents));
-            encoder.compress();
-            hasBeenCompressed = true;
-            JOptionPane.showMessageDialog(null, "Compression done succesfully");
-        }
-    }
-*/
 
     public static void main(String[] args) {
         new HuffmanEncoderGUI();

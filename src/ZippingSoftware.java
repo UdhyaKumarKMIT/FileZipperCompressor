@@ -21,9 +21,10 @@ public class ZippingSoftware extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addWindowListener(new HeadingSlider());
 
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(10, 10, 10, 10); // Add padding around components
+        setLocationRelativeTo(null); // Center the window
 
-        setLocationRelativeTo(null);
+        // Heading label
         headingLabel = new JLabel("");
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -43,12 +44,14 @@ public class ZippingSoftware extends JFrame {
         add(folderPathLabel, gbc);
 
         // Folder path text field
-        folderPathTextField = new JTextField(20);
+        folderPathTextField = new JTextField();
         folderPathTextField.setEditable(false); // Not editable directly
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Allow horizontal stretching
+        gbc.weightx = 1.0; // Allow this column to expand
         add(folderPathTextField, gbc);
 
         // Select folder button
@@ -60,11 +63,15 @@ public class ZippingSoftware extends JFrame {
         add(selectFolderButton, gbc);
         selectFolderButton.addActionListener(new SelectFolderButtonListener());
 
+
+
+
         // Zip button
         zipButton = new JButton("Zip Folder");
         gbc.gridx = 2;
         gbc.gridy = 2;
         gbc.gridwidth = 1;
+
         gbc.anchor = GridBagConstraints.CENTER;
         add(zipButton, gbc);
         zipButton.addActionListener(new ZipButtonListener());
@@ -79,12 +86,14 @@ public class ZippingSoftware extends JFrame {
         add(zipFilePathLabel, gbc);
 
         // ZIP file path text field
-        zipFilePathTextField = new JTextField(20);
+        zipFilePathTextField = new JTextField();
         zipFilePathTextField.setEditable(false); // Not editable directly
         gbc.gridx = 1;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Allow horizontal stretching
+        gbc.weightx = 1.0; // Allow this column to expand
         add(zipFilePathTextField, gbc);
 
         // Select ZIP file button
@@ -126,6 +135,7 @@ public class ZippingSoftware extends JFrame {
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFolder = fileChooser.getSelectedFile();
                 selectedFolderPath = selectedFolder.getAbsolutePath();
+                JOptionPane.showMessageDialog(null,selectedFolderPath);
                 folderPathTextField.setText(selectedFolderPath);
                 statusLabel.setText("Status: Folder selected for zipping.");
             } else {
@@ -171,7 +181,25 @@ public class ZippingSoftware extends JFrame {
             }
 
             String zipFileName = selectedFolderPath + ".zip";
+            File zipFile = new File(zipFileName);
 
+            // If the file exists, delete it to replace with the new one
+            if (zipFile.exists()) {
+                int confirm = JOptionPane.showConfirmDialog(
+                        null,
+                        "A zip file with the same name already exists. Do you want to replace it?",
+                        "Confirm Overwrite",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (confirm == JOptionPane.NO_OPTION) {
+                    return; // If the user doesn't want to replace the file, stop the operation
+                } else {
+                    zipFile.delete(); // Delete the existing zip file
+                }
+            }
+
+            // Proceed with zipping the folder
             try {
                 zipFolder(selectedFolderPath, zipFileName);
                 statusLabel.setText("Status: Folder zipped successfully!");
@@ -182,6 +210,7 @@ public class ZippingSoftware extends JFrame {
             }
         }
     }
+
 
     // Action listener for unzipping the selected ZIP file
     private class UnzipButtonListener implements ActionListener {
