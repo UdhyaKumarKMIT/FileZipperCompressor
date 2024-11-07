@@ -1,10 +1,10 @@
+package FileZippingUnzipping;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.zip.*;
-
 public class ZippingSoftware extends JFrame {
     private JTextField folderPathTextField, zipFilePathTextField;
     private JButton selectFolderButton, zipButton, selectZipFileButton, unzipButton;

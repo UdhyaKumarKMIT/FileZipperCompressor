@@ -1,3 +1,4 @@
+package TextFileCompression;
 public class CharNode {
     CharNode next;
     char ch;

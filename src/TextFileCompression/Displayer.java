@@ -1,3 +1,4 @@
+package TextFileCompression;
 import javax.swing.*;
 
 public class Displayer extends JFrame {

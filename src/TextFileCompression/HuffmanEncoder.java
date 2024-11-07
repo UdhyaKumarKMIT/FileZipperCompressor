@@ -1,3 +1,5 @@
+package TextFileCompression;
+
 public class HuffmanEncoder {
     private String text;
     private Message msgObject;

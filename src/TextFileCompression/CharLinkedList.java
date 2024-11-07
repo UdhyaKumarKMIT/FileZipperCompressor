@@ -1,3 +1,4 @@
+package TextFileCompression;
 public class CharLinkedList {
     private CharNode head=null, tail = null;
     private int size=0;

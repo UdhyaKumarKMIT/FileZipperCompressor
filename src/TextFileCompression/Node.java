@@ -1,3 +1,5 @@
+package TextFileCompression;
+
 public class Node implements Comparable<Node> {
     Node left;
     Node right;

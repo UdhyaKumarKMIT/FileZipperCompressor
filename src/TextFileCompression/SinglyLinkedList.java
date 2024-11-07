@@ -1,3 +1,5 @@
+package TextFileCompression;
+
 public class SinglyLinkedList<T> {
     private LLNode head = null;
     private LLNode tail = null;

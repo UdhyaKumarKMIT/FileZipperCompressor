@@ -1,3 +1,5 @@
+package TextFileCompression;
+
 public class HuffmanTree {
     private Node root;
     private Message sequence;

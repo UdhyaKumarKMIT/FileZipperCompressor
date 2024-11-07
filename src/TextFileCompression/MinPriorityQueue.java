@@ -1,3 +1,5 @@
+package TextFileCompression;
+
 import java.util.*;
 
 public class MinPriorityQueue<T extends Comparable<T>> {

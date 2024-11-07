@@ -1,3 +1,4 @@
+package ImageCompression;
 public class DctProcessor {
     private final int blockSize;
 
@@ -56,7 +57,8 @@ public class DctProcessor {
 
         for (int u = 0; u < blockSize; u++) {
             for (int v = 0; v < blockSize; v++) {
-                block[u][v] = Math.round(block[u][v] / (quantizationTable[u][v] * quality));
+                block[u][v] = Math.round(block[u][v] / (quantizationTable[u][v] * (quality / 2.0f)));
+
             }
         }
     }

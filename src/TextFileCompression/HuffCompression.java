@@ -1,3 +1,5 @@
+package TextFileCompression;
+
 import java.util.*;
 import java.io.*;
 

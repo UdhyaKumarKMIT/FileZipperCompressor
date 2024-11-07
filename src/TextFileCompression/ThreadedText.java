@@ -1,9 +1,11 @@
+package TextFileCompression;
+
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 
-
+import TextFileCompression.*;
     public class ThreadedText implements Runnable {
         private final String Text;
         private final JLabel F;

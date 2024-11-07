@@ -1,3 +1,5 @@
+package TextFileCompression;
+
 import java.util.*;
 public class Message {
     private final String text;

@@ -1,3 +1,4 @@
+package TextFileCompression;
 public class ByteNode implements Comparable<ByteNode>{
     Byte data;
     int frequency;
